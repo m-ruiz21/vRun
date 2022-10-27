@@ -68,7 +68,7 @@ print_doc()
   echo -e "\t\t accordingly. To avoid malicious code being injected into the config"
   echo -e "\t\t file and run by run.sh with special permissions, it expects a"
   echo -e "\t\t Specific format. It's easy enough to follow if you want, but why?"
-  echo -e "\t\t Just use the build in tools..."
+  echo -e "\t\t Just use the built in tools..."
   echo
   echo
   echo "Trouble Shooting"
