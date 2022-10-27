@@ -8,7 +8,7 @@ help()
 {
   echo "Compiles, runs, and (optionally) showns waveform for verilog script"
   echo 
-  echo "Syntax: ./run.sh options:<b|v|p>"
+  echo "Syntax: ./run.sh options:<b|v|p|a|d|u|t|h>"
   echo "options:"
   echo "b {name}    Build name (required unless printing options)"
   echo "v           Display waveform"
