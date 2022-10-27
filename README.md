@@ -19,13 +19,13 @@ This will:
 ```
 sudo apt install gtkwave
 ````
-**XServer**  - windows X-Server (only if using wsl/wsl2)"  
+**XServer**  - windows X-Server (only if using wsl/wsl2)
 ```
-To install, check out sourceforge.net/projects/vcxsrv"  
+To install, check out sourceforge.net/projects/vcxsrv
 ```
-**iverilog** - verilog compiler"
+**iverilog** - verilog compiler
  ```
- sudo apt-get install iverilog"
+ sudo apt-get install iverilog
  ```
  # Configuration
 vRun uses a vRun.conf file for configuration. It needs the configuration file to do anything.    
