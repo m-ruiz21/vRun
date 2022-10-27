@@ -7,7 +7,7 @@ Go to whatever repository you want to install this in, and run
 ```
 git clone https://github.com/m-ruiz21/vRun.git
 chmod +x vRun
-vRun -u
+./vRun -u
 ```
 This will:
 1) Clone repo into your directory
