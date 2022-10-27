@@ -38,7 +38,7 @@ Just use the built in tools...
 
 # Options
  b {name} - Builds name  
-         Notes: requied unless you are printing options / available builds
+         Notes: requied if you want to display waveform
 
  v - Display waveform
 
