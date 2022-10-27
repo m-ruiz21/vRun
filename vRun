@@ -44,9 +44,9 @@ print_doc()
   echo
   echo "Options"
   echo -e "\t b {name} - Builds name"
-  echo -e "\t\t Notes: requied unless you are printing options / available builds"
+  echo -e "\t\t Notes: requied if displaying waveform"
   echo
-  echo -e "\t v - Display waveform"
+  echo -e "\t s - Display waveform"
   echo 
   echo -e "\t p - Prints available builds"
   echo
