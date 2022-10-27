@@ -1,2 +1,66 @@
 # vRun
-Bash script that compiles, runs, and (optionally) showns waveform for verilog script
+Bash script that compiles, runs, and (optionally) showns waveform for verilog script. 
+This repo specifically 
+
+# Installation
+Go to whatever repository you want to install this in, and run
+```
+git clone https://github.com/m-ruiz21/vRun.git
+chmod +x vRun
+vRun -u
+```
+This will:
+1) Clone repo into your directory
+2) Give permissions to run vRun
+3) uUpdate vRun and add it to PATH (so you can run it anywhere)
+
+# Dependencies
+**gtkwave**  - used to display waveforms"
+```
+sudo apt install gtkwave"
+````
+**XServer**  - windows X-Server (only if using wsl/wsl2)"  
+```
+To install, check out sourceforge.net/projects/vcxsrv"  
+```
+**iverilog** - verilog compiler"
+ ```
+ sudo apt-get install iverilog"
+ ```
+ # Configuration
+vRun uses the vRun.conf file. MAKE SURE THEY STAY TOGETHER. vRun needs the configuration file to do anything.    
+It reads the file line by line and adds builds to associative array accordingly. To avoid malicious code being injected into the config  
+file and run by run.sh with special permissions, it expects a Specific format. It's easy enough to follow if you want, but why?  
+Just use the build in tools...  
+
+# Options
+ b {name} - Builds name  
+         Notes: requied unless you are printing options / available builds
+
+ v - Display waveform
+
+ p - Prints available builds
+
+ a {name} - Adds build with given name  
+         Notes: will add name assuming {name}Test.v and {name}.v exist
+
+ d {name} - Deletes build with given name
+
+ c - checks health / proper dependencies
+
+ h - prints help screen / documentation
+ 
+ # Troubleshooting
+ Trouble Shooting
+ Health Check
+     vRun checks:  
+     1) vRun.conf exists / is reachable by the program  
+     2) iverilog is installed / can be found  
+     3) gtkwave is installed / can be found  
+     4) x server is running and the wsl can open up the display  
+
+ X Server connection issues  
+     Make sure the following options are selected when setting up XLaunch:  
+     - Display number: 0  
+     - &#9745; Start no client  
+     - &#9745; Disable access control  
