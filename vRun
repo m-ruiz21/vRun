@@ -1,0 +1,263 @@
+#!/bin/bash
+
+RED='\033[0;31m'
+NC='\033[0m'  # to reset the color
+GREEN='\033[0;32m'
+
+help()
+{
+  echo "Compiles, runs, and (optionally) showns waveform for verilog script"
+  echo 
+  echo "Syntax: ./run.sh options:<b|v|p>"
+  echo "options:"
+  echo "b {name}    Build name (required unless printing options)"
+  echo "v           Display waveform"
+  echo "p           Print available builds"
+  echo "a {name}    Add build with given name."
+  echo "d {name}    Deletes build with given name"
+  echo "u           Updates vRun"
+  echo "t           Troubleshoot - checks health / dependencies"
+  echo "h           Help - for more infor like dependencies, functionality, etc"
+}
+
+# ------ Documentation ------ #
+print_doc()
+{
+  echo "Name: vRun"
+  echo "Author: Andres Mateo Ruiz"
+  echo "Last Edit: 10/26/2022"
+  echo 
+  echo "Summary:"
+  echo -e "\t bash script to facilitate compiling and running verilog"
+  echo 
+  echo
+  echo "Dependencies:"
+  echo -e "\t gtkwave  - used to display waveforms"
+  echo -e "\t\t Install:: sudo apt install gtkwave"
+  echo
+  echo -e "\t XServer  - windows X-Server (only if using wsl/wsl2)"
+  echo -e "\t\t Install:: check out sourceforge.net/projects/vcxsrv"
+  echo
+  echo -e "\t iverilog - verilog compiler"
+  echo -e "\t\t Install:: sudo apt-get install iverilog"
+  echo
+  echo
+  echo "Options"
+  echo -e "\t b {name} - Builds name"
+  echo -e "\t\t Notes: requied unless you are printing options / available builds"
+  echo
+  echo -e "\t v - Display waveform"
+  echo 
+  echo -e "\t p - Prints available builds"
+  echo
+  echo -e "\t a {name} - Adds build with given name"
+  echo -e "\t\t Notes: will add name assuming {name}Test.v and {name}.v exist"
+  echo
+  echo -e "\t d {name} - Deletes build with given name"
+  echo
+  echo -e "\t c - checks health / proper dependencies"
+  echo
+  echo -e "\t h - prints this help screen!!"
+  echo 
+  echo
+  echo "Implementation"
+  echo -e "\t Configuration"
+  echo -e "\t\t vRun uses the vRun.conf file. MAKE SURE THEY STAY TOGETHER."
+  echo -e "\t\t vRun needs the configuration file to do anything." 
+  echo -e "\t\t It reads the file line by line and adds builds to associative array"
+  echo -e "\t\t accordingly. To avoid malicious code being injected into the config"
+  echo -e "\t\t file and run by run.sh with special permissions, it expects a"
+  echo -e "\t\t Specific format. It's easy enough to follow if you want, but why?"
+  echo -e "\t\t Just use the build in tools..."
+  echo
+  echo
+  echo "Trouble Shooting"
+  echo -e "\t Health Check"
+  echo -e "\t\t vRun checks:"
+  echo -e "\t\t 1) vRun.conf exists / is reachable by the program"
+  echo -e "\t\t 2) iverilog is installed / can be found"
+  echo -e "\t\t 3) gtkwave is installed / can be found"
+  echo -e "\t\t 4) x server is running and the wsl can open up the display"
+  echo 
+  echo -e "\t X Server connection issues"
+  echo -e "\t\t Make sure the following options are selected when setting up XLaunch:"
+  echo -e "\t\t - Display number: 0"
+  echo -e "\t\t - Start no client: y"
+  echo -e "\t\t - Disable access control: y"
+}
+
+# ------ Helper Functions ------ #
+# TODO: error handling helper function
+
+print_builds()
+{
+  echo "Available builds:"
+  echo 
+  for key in "${!build_vals[@]}"; do
+    echo "$key -> ${build_vals[$key]}"
+  done                              
+}
+
+add_build() 
+{ 
+  sed -i "$ a $1= ${1}Test.v ${1}.v" vRun.conf
+  if [ ! $? -eq 0 ]; then
+    echo -e "${RED}!!!ERROR failed to make build.${NC}"
+    echo "check health with vRun -c"
+  else 
+    echo -e "${GREEN}Successfully added ${1} ${NC}"
+  fi
+}
+
+delete_build()
+{
+  grep -v "${1}=" vRun.conf > temp.conf; mv temp.conf vRun.conf 
+  if [ ! $? -eq 0 ]; then
+    echo -e "${RED}!!!ERROR failed to delete build ${NC}"
+    echo "check health with vRun -c"
+  else 
+    echo -e "${GREEN}Successfully deleted ${1} ${NC}"
+  fi
+}
+
+check_health()
+{
+  # check if config file exists 
+  if [ -f "vRun.conf" ]; then
+    echo -e "[${GREEN}\xE2\x9C\x94${NC}] vRun.conf exists."
+  else
+    echo -e "[${RED}\xE2\x9D\x8C${NC}] vRun.conf not found.${NC}"
+    echo -e "\t make sure vRun.conf is in the same directory"
+  fi
+
+  # check if iverilog is installed
+  if command -v iverilog >/dev/null 2>&1 ; then
+    echo -e "[${GREEN}\xE2\x9C\x94${NC}] iverilog found."
+  else
+      echo -e "[${RED}\xE2\x9D\x8C${NC}] iverilog not found."
+      echo -e "\t install with sudo apt-get install iverilog"
+  fi
+
+  # check if gtkwave is installed
+  if command -v gtkwave >/dev/null 2>&1 ; then
+    echo -e "[${GREEN}\xE2\x9C\x94${NC}] gtkwave found."
+  else
+    echo -e "[${RED}\xE2\x9D\x8C${NC}] gtkwave not found."
+    echo -e "\t install with sudo apt install gtkwave"
+  fi
+
+  export DISPLAY="$(hostname).local:0"
+  if ! timeout 1s xset q &>/dev/null; then
+    echo -e "[${RED}\xE2\x9D\x8C${NC}] No X server connected"
+  else 
+    echo -e "[${GREEN}\xE2\x9C\x94${NC}] X server connected at \$DISPLAY [$DISPLAY]"
+  fi
+}
+
+update()
+{
+    git pull https://github.com/m-ruiz21/vRun.git
+    sudo cp vRun /usr/bin/
+    if [ ! $? -eq 0 ]; then
+        echo
+        echo -e "${RED}!!!ERROR failed to update. ${NC} "
+        echo "check execution trace for more info"
+    else 
+        echo 
+        echo -e "${GREEN}Successfully updated${NC}"
+    fi
+}
+
+# ------ Main Code ------ #
+
+# chack if there's any arguments
+if [ $# -eq 0 ]; then
+  help
+  exit
+fi
+
+# declaring build vals
+declare -A build_vals
+while read line
+do 
+  if echo $line | grep -F = &>/dev/null
+  then 
+    varname=$(echo "$line" | cut -d '=' -f 1)
+    build_vals[$varname]=$(echo "$line" | cut -d '=' -f 2-)
+  fi
+done < vRun.conf
+
+# getting options from user
+show=false
+build_name="null"
+while getopts "pshutb:a:d:" opt; do
+  case $opt in
+    s) 
+      show=true;;
+    b)
+      build_name=$OPTARG;;
+    p)
+      print_builds
+      exit;;
+    a)
+      add_build $OPTARG
+      exit;;
+    d) 
+      delete_build $OPTARG
+      exit;;
+    h)
+      print_doc
+      exit;;
+    t)
+      check_health
+      exit;;
+    u) 
+      update
+      exit;;
+    \?)
+      echo "Error: Invalid Option. Run vRun or vRun -h for valid options"
+      exit;;
+  esac
+done
+
+# check if build is declared
+if [ ! -v build_vals[$build_name] ]; then
+  echo "Build not declared."
+  echo "hint: you can create build using vRun -a {build name} or check valid builds using vRun -p"
+  echo "also, make sure .conf file exists in directory"
+  exit
+fi 
+
+# build
+echo "building $build_name ${build_vals[$build_name]}..."
+iverilog -o $build_name ${build_vals[$build_name]}
+if [ ! $? -eq 0 ]; then
+  echo
+  echo -e "${RED}!!!ERROR: build failed. ${NC} check iverilog output for more information"
+  echo "alternatively, check health with vRun -t or consult documentation wiht vRun -h"
+  exit 
+fi
+
+# run
+echo "testing..."
+./$build_name 
+if [ ! $? -eq 0 ]; then
+  echo
+  echo -e "${RED}!!!ERROR: execution failed. ${NC} check execution trace for more information"
+  echo "alternatively, check health with vRun -t or consult documentation wiht vRun -h"
+  exit
+fi
+
+# show waveform
+if $show; then
+  echo "Getting waveform..."
+
+  export DISPLAY="$(hostname).local:0"
+  gtkwave ${build_name}Test.vcd
+  if [ ! $? -eq 0 ]; then
+    echo
+    echo -e "${RED}!!!ERROR execution failed. ${NC} check execution trace for more information"
+    echo "alternatively, check health with vRun -t or consult documentation with vRun -h"
+    exit
+  fi
+fi
