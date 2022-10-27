@@ -10,11 +10,12 @@ help()
   echo 
   echo "Syntax: ./run.sh options:<b|v|p|a|d|u|t|h>"
   echo "options:"
-  echo "b {name}    Build name (required unless printing options)"
-  echo "v           Display waveform"
+  echo "b {name}    Build name (required if displaying waveforms)"
+  echo "s           View waveform"
   echo "p           Print available builds"
   echo "a {name}    Add build with given name."
   echo "d {name}    Deletes build with given name"
+  echo "c           Created config file"
   echo "u           Updates vRun"
   echo "t           Troubleshoot - checks health / dependencies"
   echo "h           Help - for more infor like dependencies, functionality, etc"
@@ -46,7 +47,7 @@ print_doc()
   echo -e "\t b {name} - Builds name"
   echo -e "\t\t Notes: requied if displaying waveform"
   echo
-  echo -e "\t s - Display waveform"
+  echo -e "\t s - Show waveform"
   echo 
   echo -e "\t p - Prints available builds"
   echo
@@ -55,7 +56,9 @@ print_doc()
   echo
   echo -e "\t d {name} - Deletes build with given name"
   echo
-  echo -e "\t c - checks health / proper dependencies"
+  echo -e "\t c - Create config file"
+  echo
+  echo -e "\t t - Troubleshoot: checks health / proper dependencies"
   echo
   echo -e "\t h - prints this help screen!!"
   echo 
@@ -154,6 +157,15 @@ check_health()
   fi
 }
 
+set_config()
+{
+  if [ -f "vRun.conf" ]; then
+    echo "config file already exists"
+  else 
+    touch vRun.conf
+  fi
+}
+
 update()
 {
     git pull https://github.com/m-ruiz21/vRun.git
@@ -190,7 +202,7 @@ done < vRun.conf
 # getting options from user
 show=false
 build_name="null"
-while getopts "pshutb:a:d:" opt; do
+while getopts "pshutcb:a:d:" opt; do
   case $opt in
     s) 
       show=true;;
@@ -210,6 +222,9 @@ while getopts "pshutb:a:d:" opt; do
       exit;;
     t)
       check_health
+      exit;;
+    c)
+      set_config
       exit;;
     u) 
       update
