@@ -15,9 +15,9 @@ This will:
 3) Update vRun and add it to PATH (so you can run it anywhere)
 
 # Dependencies
-**gtkwave**  - used to display waveforms"
+**gtkwave**  - used to display waveforms
 ```
-sudo apt install gtkwave"
+sudo apt install gtkwave
 ````
 **XServer**  - windows X-Server (only if using wsl/wsl2)"  
 ```
