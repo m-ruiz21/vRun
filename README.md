@@ -1,6 +1,6 @@
 # vRun
-Bash script that compiles, runs, and (optionally) showns waveform for verilog script. 
-This repo specifically 
+Bash script that compiles, runs, and (optionally) showns waveform for verilog script.   
+This repo specifically includes the vRun script and an example config file.
 
 # Installation
 Go to whatever repository you want to install this in, and run
@@ -28,10 +28,13 @@ To install, check out sourceforge.net/projects/vcxsrv"
  sudo apt-get install iverilog"
  ```
  # Configuration
-vRun uses the vRun.conf file. MAKE SURE THEY STAY TOGETHER. vRun needs the configuration file to do anything.    
+vRun uses a vRun.conf file for configuration. It needs the configuration file to do anything.    
+  
+**important!!** make sure a config file is always in the same directory you're calling vRun from.  
+  
 It reads the file line by line and adds builds to associative array accordingly. To avoid malicious code being injected into the config  
 file and run by run.sh with special permissions, it expects a Specific format. It's easy enough to follow if you want, but why?  
-Just use the build in tools...  
+Just use the built in tools...  
 
 # Options
  b {name} - Builds name  
@@ -51,7 +54,6 @@ Just use the build in tools...
  h - prints help screen / documentation
  
  # Troubleshooting
- Trouble Shooting
  Health Check
      vRun checks:  
      1) vRun.conf exists / is reachable by the program  
