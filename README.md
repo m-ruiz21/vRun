@@ -12,8 +12,9 @@ chmod +x vRun
 ```
 This will:
 1) Clone repo into your directory
-2) Give permissions to run vRun
-3) Update vRun and add it to PATH (so you can run it anywhere)
+2) Enter vRun source code directory
+3) Give permissions to run vRun
+4) Update vRun and add it to PATH (so you can run it anywhere)
 
 # Dependencies
 **gtkwave**  - used to display waveforms
