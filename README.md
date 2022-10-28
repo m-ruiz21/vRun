@@ -6,6 +6,7 @@ This repo specifically includes the vRun script and an example config file.
 Go to whatever repository you want to install this in, and run
 ```
 git clone https://github.com/m-ruiz21/vRun.git
+cd vRun
 chmod +x vRun
 ./vRun -u
 ```
