@@ -11,7 +11,7 @@ help()
   echo "Syntax:     vRun options:<b|v|p|a|d|u|t|h>"
   echo "options:"
   echo "b {name}    Build name (required if displaying waveforms)"
-  echo "s           View waveform"
+  echo "s           Show waveform"
   echo "p           Print available builds"
   echo "a {name}    Add build with given name."
   echo "d {name}    Deletes build with given name"
@@ -169,7 +169,7 @@ set_config()
 update()
 {
     git pull https://github.com/m-ruiz21/vRun.git
-    sudo cp vRun /usr/bin/
+    sudo cp vRun /usr/bin 
     if [ ! $? -eq 0 ]; then
         echo
         echo -e "${RED}!!!ERROR failed to update. ${NC} "
