@@ -34,8 +34,7 @@ vRun uses a vRun.conf file for configuration. It needs the configuration file to
   
 **important!!** make sure a config file is always in the same directory you're calling vRun from.  
   
-It reads the file line by line and adds builds to associative array accordingly. To avoid malicious code being injected into the config  
-file and run by run.sh with special permissions, it expects a Specific format. It's easy enough to follow if you want, but why?  
+It reads the file line by line and adds builds to associative array accordingly. To avoid malicious code being injected into the config file and run by run.sh with special permissions, it expects a Specific format. It's easy enough to follow if you want, but why?  
 Just use the built in tools...  
 
 # Options
