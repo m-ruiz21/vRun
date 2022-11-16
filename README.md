@@ -49,8 +49,10 @@ Just use the built in tools...
          Notes: will add name assuming {name}Test.v and {name}.v exist
 
  d {name} - Deletes build with given name
+ 
+ c - create default config file
 
- c - checks health / proper dependencies
+ t - toubleshooting checks health / proper dependencies
 
  h - prints help screen / documentation
  
