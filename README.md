@@ -1,5 +1,5 @@
 # vRun
-Bash script that compiles, runs, and (optionally) showns waveform for verilog script.   
+Bash script that helps manage and rapidly compile, run, and generate waveforms for verilog projects.   
 This repo specifically includes the vRun script and an example config file.
 
 # Installation
